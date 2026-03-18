@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Inventory System</title>
+
+  <!-- Firebase SDK 9+ -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js';
+  import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCxXKQE9ietlYXU9Sm5qzXLb27G1xR0prs",
+    authDomain: "lab3-8f22c.firebaseapp.com",
+    databaseURL: "https://lab3-8f22c-default-rtdb.firebaseio.com",
+    projectId: "lab3-8f22c",
+    storageBucket: "lab3-8f22c.appspot.com",
+    messagingSenderId: "838903651885",
+    appId: "1:838903651885:web:abcdef123456"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+
+  // References to both paths
+  const raphaelRef = ref(database, 'raphael/Smart_Scale_Simple');
+  const agrimRef = ref(database, 'agrim/Object_Count');
+
+  // Listen to Raphael's data
+  onValue(raphaelRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      displayRaphaelData(data);
+    } else {
+      console.log("No data available in 'raphael/Smart_Scale_Simple'.");
+    }
+  });
+
+  // Listen to Agrim's data
+  onValue(agrimRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      displayAgrimData(data);
+    } else {
+      console.log("No data available in 'agrim/Object_Count'.");
+    }
+  });
+
+  // Function to display Raphael's data
+  function displayRaphaelData(data) {
+    const inventoryList = document.getElementById('inventoryList');
+    inventoryList.innerHTML = ''; // Clear existing content
+
+    for (const item in data) {
+      if (data.hasOwnProperty(item)) {
+        const itemData = data[item];
+        const row = document.createElement('tr');
+
+        // Create cells for Raphael's data
+        const itemNameCell = document.createElement('td');
+        itemNameCell.textContent = item;
+        row.appendChild(itemNameCell);
+
+        const itemQuantityCell = document.createElement('td');
+        itemQuantityCell.textContent = itemData;
+        row.appendChild(itemQuantityCell);
+
+        inventoryList.appendChild(row);
+      }
+    }
+  }
+
+  // Function to display Agrim's data
+  function displayAgrimData(data) {
+    const inventoryList = document.getElementById('inventoryList');
+
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        const objectData = data[key];
+
+        const row = document.createElement('tr');
+
+        // Create cells for Agrim's data
+        const itemNameCell = document.createElement('td');
+        itemNameCell.textContent = objectData.name; // Use the 'name' field
+        row.appendChild(itemNameCell);
+
+        const itemQuantityCell = document.createElement('td');
+        itemQuantityCell.textContent = objectData.count; // Use the 'count' field
+        row.appendChild(itemQuantityCell);
+
+        inventoryList.appendChild(row);
+      }
+    }
+  }
+</script>
+
+
+  <!-- Custom CSS -->
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f0f8ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Horizontally centers content */
+    padding-top: 50px;  /* Moves content up */
+  }
+
+  h1 {
+    color: #4CAF50;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  #inventoryTable {
+    width: 60%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  #inventoryTable th, #inventoryTable td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+
+  #inventoryTable th {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  #inventoryTable td {
+    text-transform: capitalize;
+  }
+
+  #inventoryTable th, td {
+    width: 50%;  /* Ensure both columns are equally wide */
+  }
+</style>
+
+
+
+
+
+</head>
+<body>
+  <h1>Smart Inventory System</h1>
+  <p>Here are the inventory items:</p>
+
+  <!-- Inventory Table -->
+  <table id="inventoryTable">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+      </tr>
+    </thead>
+    <tbody id="inventoryList">
+      <!-- The inventory items will be dynamically added here -->
+    </tbody>
+  </table>
+
+  <!-- Live Camera Feed -->
+  <h2>Live Camera Feed</h2>
+  <img src="http://0.0.0.0:5000/video_feed" alt="Live Camera Feed" style="width: 60%; border: 1px solid #ddd;">
+</body>
+
+</body>
+</html>

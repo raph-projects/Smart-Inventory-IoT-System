@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Viewer</title>
+    <script>
+        async function fetchData() {
+            const response = await fetch('/get');
+            const data = await response.json();
+            document.getElementById("data").innerText = JSON.stringify(data, null, 2);
+        }
+        window.onload = fetchData;
+    </script>
+</head>
+<body>
+    <h1>Database Contents</h1>
+    <pre id="data">Loading...</pre>
+</body>
+</html>
