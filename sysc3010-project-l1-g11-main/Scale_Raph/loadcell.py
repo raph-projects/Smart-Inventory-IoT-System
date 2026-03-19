@@ -2,14 +2,11 @@ import RPi.GPIO as GPIO
 from hx711 import HX711
 import time
 import pyrebase
+from mydbconfig import config
 
 # ──────────────── Firebase Configuration ──────────────── #
-config = {
-    "apiKey": "AIzaSyCxXKQE9ietlYXU9Sm5qzXLb27G1xR0prs", 
-    "authDomain": "lab3-8f22c.firebaseapp.com", 
-    "databaseURL": "https://lab3-8f22c-default-rtdb.firebaseio.com/", 
-    "storageBucket": "lab3-8f22c.appspot.com"
-}
+# Credentials are loaded from mydbconfig.py (not committed to GitHub).
+# Copy mydbconfig.example.py to mydbconfig.py and fill in your credentials.
 
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
@@ -77,7 +74,6 @@ try:
     while True:
         current_weight = hx.get_weight_mean(readings=20)
 
-        # ──────────────── Auto-reset if scale is empty ──────────────── #
         if abs(current_weight) < 1.0:
             if any(item_counts.values()):
                 item_counts = {name: 0 for name in item_weights}
@@ -87,13 +83,10 @@ try:
             time.sleep(0.6)
             continue
 
-        # ──────────────── Normal detection logic ──────────────── #
         delta = current_weight - prev_weight
 
-        if abs(delta) > 2.0:  # Ignore tiny fluctuations
-            direction = "added" if delta > 0 else "removed"
+        if abs(delta) > 2.0:
             delta_abs = abs(delta)
-
             name, count = detect_object_type(delta_abs, item_weights, tolerance)
 
             if name:
@@ -108,7 +101,6 @@ try:
                 prev_weight = current_weight
             else:
                 print(f"\nUnrecognized object(s), delta: {delta:.2f} g")
-
         else:
             print(f"Waiting... Current: {current_weight:.2f} g     ", end='\r')
 
@@ -117,4 +109,3 @@ try:
 except KeyboardInterrupt:
     print("\nExiting...")
     GPIO.cleanup()
-
