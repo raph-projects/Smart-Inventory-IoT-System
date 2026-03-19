@@ -1,0 +1,31 @@
+# ── Credentials ── never commit these
+mydbconfig.py
+firebase_config.json
+
+# ── Databases ──
+*.db
+*.sqlite
+
+# ── Local mock data with real entries ──
+db.json
+
+# ── Media files ──
+*.h264
+*.mp4
+*.avi
+
+# ── Python ──
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ── IDE ──
+.idea/
+.vscode/
+*.iml
+
+# ── OS ──
+.DS_Store
+Thumbs.db
