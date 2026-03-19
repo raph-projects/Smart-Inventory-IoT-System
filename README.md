@@ -1,4 +1,4 @@
-# 🧠 Smart Pantry Inventory System
+# Smart Pantry Inventory System
 
 An AI-powered, IoT-based smart inventory system built on a distributed network of five Raspberry Pi nodes. The system automatically tracks pantry items in real time using computer vision, weight sensing, ultrasonic detection, and a Firebase backend — eliminating the need for manual inventory management.
 
@@ -6,9 +6,11 @@ An AI-powered, IoT-based smart inventory system built on a distributed network o
 
 ---
 
-## 📌 Overview
+## Overview
 
 Managing a home pantry is a persistent challenge — food expires, items run out unexpectedly, and manual tracking is error-prone. This project automates pantry management by combining AI-based image recognition, IoT hardware, and real-time Firebase synchronization across a five-node Raspberry Pi network.
+
+![image alt](https://github.com/raph-projects/Smart-Inventory-IoT-System/blob/80820ae9f425bfc0a54eb831254c1d741ed1403a/Pi-Stock_Final-product-picture.png)
 
 **Key features:**
 - **Automatic item detection** via EfficientDet Lite (TensorFlow Lite) object recognition
