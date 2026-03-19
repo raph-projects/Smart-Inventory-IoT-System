@@ -175,7 +175,6 @@ Copy the example config and fill in your own Firebase credentials:
 cp mydbconfig.example.py mydbconfig.py
 ```
 
-> ⚠️ **Never commit `mydbconfig.py` to GitHub.** It is listed in `.gitignore`.
 
 Enable I2C on Raspberry Pi (for LCD):
 ```bash
