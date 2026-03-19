@@ -1,20 +1,18 @@
 import RPi.GPIO as GPIO
 import time
 import pyrebase
+from mydbconfig import config
 
-# === Firebase Setup ===
-config = {
-    "apiKey": "AIzaSyCxXKQE9ietlYXU9Sm5qzXLb27G1xR0prs",
-    "authDomain": "lab3-8f22c.firebaseapp.com",
-    "databaseURL": "https://lab3-8f22c-default-rtdb.firebaseio.com/",
-    "storageBucket": "lab3-8f22c.appspot.com"
-}
+# ── Firebase Setup ──
+# Credentials are loaded from mydbconfig.py (not committed to GitHub).
+# Copy mydbconfig.example.py to mydbconfig.py and fill in your credentials.
+
 firebase = pyrebase.initialize_app(config)
 db = firebase.database()
 username = "Abderrezak"
 dataset = "Ultrasonic_Sensor"
 
-# === GPIO Setup ===
+# ── GPIO Setup ──
 TRIG = 23
 ECHO = 16
 GPIO.setmode(GPIO.BCM)
@@ -46,7 +44,7 @@ def measure_distance():
     distance = (pulse_duration * 34300) / 2
     return round(distance, 2)
 
-# === Threshold for change (in cm) ===
+# ── Threshold for change (in cm) ──
 MIN_CHANGE_THRESHOLD = 5.0
 last_uploaded_distance = None
 
@@ -56,27 +54,24 @@ if __name__ == "__main__":
             distance = measure_distance()
             if distance is not None:
                 if distance < 10:
-                    status = "? Too close!"
+                    status = "Too close!"
                 elif distance < 30:
-                    status = "? Approaching"
+                    status = "Approaching"
                 else:
-                    status = "? Safe"
+                    status = "Safe"
 
                 print(f"{status} Object detected at {distance} cm.")
 
-                # Decide whether to update Firebase
                 if (last_uploaded_distance is None or
-                    abs(distance - last_uploaded_distance) >= MIN_CHANGE_THRESHOLD):
-                    
+                        abs(distance - last_uploaded_distance) >= MIN_CHANGE_THRESHOLD):
+
                     data = {"Distance_cm": distance, "Status": status}
 
                     try:
-                        # Push new reading
                         db.child(username).child(dataset).push(data)
-                        print("? Firebase updated.")
+                        print("Firebase updated.")
                         last_uploaded_distance = distance
 
-                        # Trim list to last 5 entries
                         all_entries = db.child(username).child(dataset).get().val()
                         if all_entries and len(all_entries) > 5:
                             sorted_keys = sorted(all_entries.keys())
@@ -84,11 +79,11 @@ if __name__ == "__main__":
                                 db.child(username).child(dataset).child(key).remove()
 
                     except Exception as e:
-                        print(f"? Firebase update failed: {e}")
+                        print(f"Firebase update failed: {e}")
                 else:
-                    print("?? No significant change. Firebase not updated.")
+                    print("No significant change. Firebase not updated.")
             else:
-                print("?? Sensor timeout.")
+                print("Sensor timeout.")
 
             time.sleep(2)
 
