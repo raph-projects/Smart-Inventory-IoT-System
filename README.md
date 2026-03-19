@@ -28,33 +28,9 @@ Managing a home pantry is a persistent challenge — food expires, items run out
 
 The system is structured as a **distributed real-time network** of five Raspberry Pi nodes:
 
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│              RPi-1 (GUI & Database Node) — Adel                     │
-│         Flask API (server.py)  ←→  SQLite DB  ←→  HTML/JS GUI      │
-└──────────────────────────────┬──────────────────────────────────────┘
-                                │ MQTT / HTTP
-┌──────────────────────────────▼──────────────────────────────────────┐
-│              RPi-2 (AI Processing Server) — Agrim                   │
-│    EfficientDet Lite (TFLite) + OpenCV → detect.py + database.py   │
-│              Picamera2 + USB Webcam → Firebase Object_Count         │
-└──────┬───────────────────────────────────────────┬──────────────────┘
-       │ MQTT                                       │ Firebase
-┌──────▼──────────────┐                 ┌───────────▼──────────────────┐
-│  RPi-3 (Camera)     │                 │  RPi-4 (Peripheral Ctrl)     │
-│  Picamera2 stream   │                 │  — Kumud / Raphael           │
-│  Firebase backend   │                 │  LCD Display (I2C, PCF8574)  │
-└─────────────────────┘                 │  Buzzer (GPIO16, PWM)        │
-                                        │  inventory_monitor.py        │
-                                        │  3-thread: display / backup  │
-                                        │  / ultrasonic trigger        │
-                                        └──────────────────────────────┘
-┌─────────────────────────────────────────────────────────────────────┐
-│              RPi-5 (Ultrasonic + Scale) — Zak / Raphael             │
-│  HC-SR04 → ultrasonic.py → Firebase (Abderrezak/Ultrasonic_Sensor) │
-│  HX711 Load Cell → loadcell.py → Firebase (raphael/Smart_Scale)    │
-└─────────────────────────────────────────────────────────────────────┘
-```
+![image alt](https://github.com/raph-projects/Smart-Inventory-IoT-System/blob/477400fe12b7de76603d118e6f18c2fca378077e/Pi-Stock_Design%20Diagram.png)
+
+---
 
 ### Communication Overview
 
